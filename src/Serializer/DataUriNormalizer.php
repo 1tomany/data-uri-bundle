@@ -20,6 +20,8 @@ use const FILTER_VALIDATE_URL;
 final readonly class DataUriNormalizer implements DenormalizerInterface
 {
     /**
+     * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
+     *
      * @param string|File $data
      * @param array<string, mixed> $context
      */
@@ -48,6 +50,8 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     }
 
     /**
+     * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
+     *
      * @param array<string, mixed> $context
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
@@ -56,7 +60,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     }
 
     /**
-     * @return array{'OneToMany\DataUri\Contract\Record\DataUriInterface': true}
+     * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      */
     public function getSupportedTypes(?string $format): array
     {
