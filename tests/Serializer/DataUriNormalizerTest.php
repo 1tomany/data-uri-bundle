@@ -7,6 +7,7 @@ use OneToMany\DataUri\Exception\InvalidArgumentException;
 use OneToMany\DataUriBundle\Serializer\DataUriNormalizer;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use function basename;
@@ -46,5 +47,15 @@ final class DataUriNormalizerTest extends TestCase
 
         $this->assertTrue($file->getType()->isTxt());
         $this->assertEquals('Hello, world!', $file->read());
+    }
+
+    public function testSupportsNormalizationWithStringAndDataUriInterface(): void
+    {
+        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization('Hello, world!', DataUriInterface::class));
+    }
+
+    public function testSupportsNormalizationWithFileAndDataUriInterface(): void
+    {
+        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(new File('/path/to/file.pdf', false), DataUriInterface::class));
     }
 }
