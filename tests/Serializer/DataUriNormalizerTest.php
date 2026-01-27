@@ -54,7 +54,7 @@ final class DataUriNormalizerTest extends TestCase
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization('Hello, world!', DataUriInterface::class));
     }
 
-    public function testSupportsNormalizationWithFileAndDataUriInterface(): void
+    public function testSupportsNormalizationWithSymfonyFileAndDataUriInterface(): void
     {
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(new File('/path/to/file.pdf', false), DataUriInterface::class));
     }

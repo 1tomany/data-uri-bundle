@@ -55,6 +55,9 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
     }
 
+    /**
+     * @return array{'OneToMany\DataUri\Contract\Record\DataUriInterface': true}
+     */
     public function getSupportedTypes(?string $format): array
     {
         return [
