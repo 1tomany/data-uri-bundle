@@ -9,6 +9,8 @@ use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function basename;
+
 use const UPLOAD_ERR_PARTIAL;
 
 #[Group('UnitTests')]
@@ -21,5 +23,12 @@ final class DataUriNormalizerTest extends TestCase
         $this->expectExceptionMessage('The file "photo.jpeg" was only partially uploaded.');
 
         new DataUriNormalizer()->denormalize(new UploadedFile('/path/to/photo.jpeg', 'photo.jpeg', 'image/jpeg', UPLOAD_ERR_PARTIAL, true), DataUriInterface::class);
+    }
+
+    public function testDenormalizingUploadedFileUsesClientOriginalName(): void
+    {
+        $file = new DataUriNormalizer()->denormalize(new UploadedFile(__FILE__, basename(__FILE__), 'text/x-php', test: true), DataUriInterface::class);
+
+        $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
     }
 }
