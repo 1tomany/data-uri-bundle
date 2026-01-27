@@ -31,4 +31,20 @@ final class DataUriNormalizerTest extends TestCase
 
         $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
     }
+
+    public function testDenormalizingRawText(): void
+    {
+        $file = new DataUriNormalizer()->denormalize('Hello, world!', DataUriInterface::class);
+
+        $this->assertTrue($file->getType()->isTxt());
+        $this->assertEquals('Hello, world!', $file->read());
+    }
+
+    public function testDenormalizingDataUri(): void
+    {
+        $file = new DataUriNormalizer()->denormalize('data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==', DataUriInterface::class);
+
+        $this->assertTrue($file->getType()->isTxt());
+        $this->assertEquals('Hello, world!', $file->read());
+    }
 }
