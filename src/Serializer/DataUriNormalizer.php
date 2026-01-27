@@ -54,10 +54,6 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        if (!interface_exists(DataUriInterface::class)) {
-            throw new RuntimeException('The data can not be denormalized because the 1tomany/data-uri-bundle library is not installed. Try running "composer require 1tomany/data-uri-bundle".');
-        }
-
         return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
     }
 

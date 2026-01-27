@@ -1,0 +1,8 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    OneToMany\DataUriBundle\Serializer\DataUriNormalizer:
+        tags:
+            - { name: serializer.denormalizer }
