@@ -1,5 +1,41 @@
 {
+    "name": "1tomany/data-uri-bundle",
+    "description": "Symfony bundle that provides bindings for the 1tomany/data-uri package",
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "minimum-stability": "stable",
+    "prefer-stable": true,
     "require": {
+        "php": ">=8.4",
         "symfony/serializer": "^7.2"
+    },
+    "autoload": {
+        "psr-4": {
+            "OneToMany\\StorageBundle\\": "src/"
+        }
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.93",
+        "phpstan/phpstan": "^2.1",
+        "phpunit/phpunit": "^12.5"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "OneToMany\\StorageBundle\\Tests\\": "tests/"
+        }
+    },
+    "scripts": {
+        "fix": "./vendor/bin/php-cs-fixer fix",
+        "stan": "./vendor/bin/phpstan",
+        "test": "./vendor/bin/phpunit"
+    },
+    "authors": [
+        {
+            "name": "Vic Cherubini",
+            "email": "vcherubini@gmail.com"
+        }
+    ],
+    "config": {
+        "sort-packages": true
     }
 }
