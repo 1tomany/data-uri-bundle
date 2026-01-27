@@ -5,13 +5,11 @@ namespace OneToMany\DataUriBundle\Serializer;
 use OneToMany\DataUri\Contract\Record\DataUriInterface;
 use OneToMany\DataUri\DataDecoder;
 use OneToMany\DataUri\Exception\InvalidArgumentException;
-use OneToMany\DataUri\Exception\RuntimeException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
 use function filter_var;
-use function interface_exists;
 use function is_a;
 use function is_string;
 use function str_starts_with;
