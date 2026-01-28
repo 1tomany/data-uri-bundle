@@ -9,7 +9,7 @@ composer require 1tomany/data-uri-bundle
 ```
 
 ## Configuration
-No configuration is necessary for the bundle. The `DataUriNormalizer` is automatically tagged and configured to denormalize instances of `DataUriInterface` objects.
+No configuration is necessary for the bundle. The denormalizer for `OneToMany\DataUri\Contract\Record\DataUriInterface` objects is automatically tagged and configured.
 
 ## Components
 * `DataUriInterface` denormalizer via the `OneToMany\DataUriBundle\Serializer\DataUriNormalizer` class.
