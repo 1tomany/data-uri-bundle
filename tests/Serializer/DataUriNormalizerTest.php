@@ -66,7 +66,7 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDoesNotSupportsNormalizationWithEmptyListDataAndDataUriInterfaceType(): void
     {
-        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization([], DataUriInterface::class));
+        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization([], DataUriInterface::class));
     }
 
     public function testSupportsNormalizationWithListOfStringsDataAndDataUriInterfaceType(): void

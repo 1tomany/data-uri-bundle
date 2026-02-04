@@ -60,7 +60,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     {
         if (is_a($type, DataUriInterface::class, true)) {
             if (is_string($data)) {
-                return true;
+                return !empty($data);
             }
 
             if ($data instanceof File) {
