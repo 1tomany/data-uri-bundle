@@ -49,6 +49,11 @@ final class DataUriNormalizerTest extends TestCase
         $this->assertEquals('Hello, world!', $file->read());
     }
 
+    public function testDoesNotSupportNormalizationWithNonStringAndNonSymfonyFileDataAndDataUriInterface(): void
+    {
+        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization(new \stdClass, DataUriInterface::class));
+    }
+
     public function testSupportsNormalizationWithStringDataAndDataUriInterfaceType(): void
     {
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization('Hello, world!', DataUriInterface::class));

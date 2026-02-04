@@ -65,6 +65,10 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
                 $isSupported = true;
             }
 
+            if ($data instanceof \Stringable) {
+                $isSupported = true;
+            }
+
             if ($data instanceof File) {
                 $isSupported = true;
             }
