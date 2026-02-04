@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
+use function count;
 use function filter_var;
 use function is_a;
+use function is_array;
 use function is_string;
 use function str_starts_with;
 use function stripos;
@@ -65,7 +67,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
                 return true;
             }
 
-            if (\is_array($data) && \count($data) > 0) {
+            if (is_array($data) && count($data) > 0) {
                 $isListOfStringsOrFileObjects = true;
 
                 foreach ($data as $dataValue) {
@@ -79,6 +81,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         }
 
         return false;
+
         return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
     }
 
