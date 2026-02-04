@@ -10,7 +10,9 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
+use function base64_encode;
 use function basename;
+use function sprintf;
 
 use const UPLOAD_ERR_PARTIAL;
 
@@ -42,15 +44,14 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDenormalizingStringableNonSymfonyFileObject(): void
     {
-        $data = new class('Hello, world!') implements \Stringable
-        {
+        $data = new class('Hello, world!') implements \Stringable {
             public function __construct(public string $data)
             {
             }
 
             public function __toString(): string
             {
-                return \sprintf('data:text/plain;base64,%s', \base64_encode($this->data));
+                return sprintf('data:text/plain;base64,%s', base64_encode($this->data));
             }
         };
 
