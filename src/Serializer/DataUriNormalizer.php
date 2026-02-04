@@ -73,7 +73,9 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
 
                 foreach ($data as $dv) {
                     if (is_string($dv)) {
-                        continue;
+                        if (!empty($dv)) {
+                            continue;
+                        }
                     }
 
                     if ($dv instanceof File) {
