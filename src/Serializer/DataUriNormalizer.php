@@ -56,6 +56,21 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
+        if (is_a($type, DataUriInterface::class, true)) {
+            if (is_string($data)) {
+                return true;
+            }
+
+            if ($data instanceof File) {
+                return true;
+            }
+
+            if (\is_array($data) && \count($data) > 0) {
+                $isListOfStringsOrFileObjects = true;
+            }
+        }
+
+        return false;
         return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
     }
 
