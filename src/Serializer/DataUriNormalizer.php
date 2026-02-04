@@ -61,15 +61,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         $isSupported = false;
 
         if (is_a($type, DataUriInterface::class, true)) {
-            if (is_string($data)) {
-                $isSupported = true;
-            }
-
-            if ($data instanceof \Stringable) {
-                $isSupported = true;
-            }
-
-            if ($data instanceof File) {
+            if ($this->isValueSupported($data)) {
                 $isSupported = true;
             }
 
@@ -78,11 +70,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
                 $supportedRecords = 0;
 
                 foreach ($data as $dv) {
-                    if (is_string($dv)) {
-                        ++$supportedRecords;
-                    }
-
-                    if ($dv instanceof File) {
+                    if ($this->isValueSupported($dv)) {
                         ++$supportedRecords;
                     }
                 }
@@ -102,5 +90,10 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         return [
             DataUriInterface::class => true,
         ];
+    }
+
+    private function isValueSupported(mixed $value): bool
+    {
+        return is_string($value) || $value instanceof File || $value instanceof \Stringable;
     }
 }
