@@ -24,20 +24,26 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
-     * @param string|File $data
+     * @param string|\Stringable|File $data
      * @param array<string, mixed> $context
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): DataUriInterface
     {
-        if ($data instanceof UploadedFile) {
-            if (!$data->isValid()) {
-                throw new InvalidArgumentException($data->getErrorMessage());
+        if ($data instanceof File) {
+            if ($data instanceof UploadedFile) {
+                if (!$data->isValid()) {
+                    throw new InvalidArgumentException($data->getErrorMessage());
+                }
+
+                $name = $data->getClientOriginalName();
+            } else {
+                $name = $data->getFilename();
+            }
+        } else {
+            if ($data instanceof \Stringable) {
+                $data = $data->__toString();
             }
 
-            $name = $data->getClientOriginalName();
-        }
-
-        if (is_string($data)) {
             // @see https://github.com/1tomany/rich-bundle/issues/66
             $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
 
