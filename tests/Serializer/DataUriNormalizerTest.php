@@ -40,6 +40,26 @@ final class DataUriNormalizerTest extends TestCase
         $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
     }
 
+    public function testDenormalizingStringableNonSymfonyFileObject(): void
+    {
+        $data = new class('Hello, world!') implements \Stringable
+        {
+            public function __construct(public string $data)
+            {
+            }
+
+            public function __toString(): string
+            {
+                return \sprintf('data:text/plain;base64,%s', \base64_encode($this->data));
+            }
+        };
+
+        $file = new DataUriNormalizer()->denormalize($data, DataUriInterface::class);
+
+        $this->assertTrue($file->getType()->isTxt());
+        $this->assertEquals('Hello, world!', $file->read());
+    }
+
     public function testDenormalizingRawText(): void
     {
         $file = new DataUriNormalizer()->denormalize('Hello, world!', DataUriInterface::class);
