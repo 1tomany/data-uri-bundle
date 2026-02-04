@@ -26,6 +26,13 @@ final class DataUriNormalizerTest extends TestCase
         new DataUriNormalizer()->denormalize(new UploadedFile('/path/to/photo.jpeg', 'photo.jpeg', 'image/jpeg', UPLOAD_ERR_PARTIAL, true), DataUriInterface::class);
     }
 
+    public function testDenormalizingFileUsesFilename(): void
+    {
+        $file = new DataUriNormalizer()->denormalize(new File(__FILE__), DataUriInterface::class);
+
+        $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
+    }
+
     public function testDenormalizingUploadedFileUsesClientOriginalName(): void
     {
         $file = new DataUriNormalizer()->denormalize(new UploadedFile(__FILE__, basename(__FILE__), 'text/x-php', test: true), DataUriInterface::class);
