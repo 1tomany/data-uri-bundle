@@ -30,14 +30,14 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): DataUriInterface
     {
         if ($data instanceof File) {
+            $name = $data->getFilename();
+
             if ($data instanceof UploadedFile) {
                 if (!$data->isValid()) {
                     throw new InvalidArgumentException($data->getErrorMessage());
                 }
 
                 $name = $data->getClientOriginalName();
-            } else {
-                $name = $data->getFilename();
             }
         } else {
             if ($data instanceof \Stringable) {
@@ -64,28 +64,28 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        $isSupported = false;
+        $isValueSupported = false;
 
         if (is_a($type, DataUriInterface::class, true)) {
             if ($this->isValueSupported($data)) {
-                $isSupported = true;
-            }
+                $isValueSupported = true;
+            } else {
+                // @see https://github.com/1tomany/data-uri-bundle/issues/1
+                if (is_array($data) && ($dataCount = count($data)) > 0) {
+                    $supportedRecords = 0;
 
-            // @see https://github.com/1tomany/data-uri-bundle/issues/1
-            if (is_array($data) && ($dataCount = count($data)) > 0) {
-                $supportedRecords = 0;
-
-                foreach ($data as $dv) {
-                    if ($this->isValueSupported($dv)) {
-                        ++$supportedRecords;
+                    foreach ($data as $dv) {
+                        if ($this->isValueSupported($dv)) {
+                            ++$supportedRecords;
+                        }
                     }
-                }
 
-                $isSupported = $dataCount === $supportedRecords;
+                    $isValueSupported = $dataCount === $supportedRecords;
+                }
             }
         }
 
-        return $isSupported;
+        return $isValueSupported;
     }
 
     /**
