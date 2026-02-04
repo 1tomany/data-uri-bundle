@@ -93,7 +93,7 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDoesNotSupportNormalizationWithNonEmptyListOfNonStringAndNonSymfonyFileDataAndDataUriInterfaceType(): void
     {
-        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization(['Hello, world!', null, new \stdClass], DataUriInterface::class));
+        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization(['Hello, world!', null, new \stdClass()], DataUriInterface::class));
     }
 
     public function testSupportsNormalizationWithNonEmptyListOfStringsDataAndDataUriInterfaceType(): void
