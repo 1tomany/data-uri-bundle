@@ -68,15 +68,18 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
             }
 
             if (is_array($data) && count($data) > 0) {
-                $isListOfStringsOrFileObjects = true;
+                $canDenormalizeList = true;
 
                 foreach ($data as $dataValue) {
-                    if (!is_string($dataValue) && !$dataValue instanceof File) {
-                        $isListOfStringsOrFileObjects = false;
+                    if (
+                        !is_string($dataValue) &&
+                        !$dataValue instanceof File
+                    ) {
+                        $canDenormalizeList = false;
                     }
                 }
 
-                return $isListOfStringsOrFileObjects;
+                return $canDenormalizeList;
             }
         }
 
