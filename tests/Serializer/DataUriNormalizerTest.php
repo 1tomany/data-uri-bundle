@@ -44,14 +44,10 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDenormalizingStringableNonSymfonyFileObject(): void
     {
-        $data = new class('Hello, world!') implements \Stringable {
-            public function __construct(public string $data)
-            {
-            }
-
+        $data = new class implements \Stringable {
             public function __toString(): string
             {
-                return sprintf('data:text/plain;base64,%s', base64_encode($this->data));
+                return 'data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==';
             }
         };
 
