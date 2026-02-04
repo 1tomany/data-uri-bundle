@@ -56,12 +56,7 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testSupportsNormalizationWithSymfonyFileDataAndDataUriInterfaceType(): void
     {
-        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(new File('/path/to/file.pdf', false), DataUriInterface::class));
-    }
-
-    public function testDoesNotSupportsNormalizationWithEmptyListDataAndDataUriInterfaceType(): void
-    {
-        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization([], DataUriInterface::class));
+        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(new File('file.pdf', false), DataUriInterface::class));
     }
 
     public function testDoesNotSupportNormalizationWithEmptyListDataAndDataUriInterfaceType(): void
@@ -72,5 +67,21 @@ final class DataUriNormalizerTest extends TestCase
     public function testSupportsNormalizationWithNonEmptyListOfStringsDataAndDataUriInterfaceType(): void
     {
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(['Hello, world!'], DataUriInterface::class));
+    }
+
+    public function testSupportsNormalizationWithNonEmptyListOfSymfonyFileDataAndDataUriInterfaceType(): void
+    {
+        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization([new File('file.pdf', false)], DataUriInterface::class));
+    }
+
+    public function testSupportsNormalizationWithNonEmptyListOfStringAndSymfonyFileDataAndDataUriInterfaceType(): void
+    {
+        $data = [
+            'Hello, world!',
+            new File('file.pdf', false),
+            'data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==',
+        ];
+
+        $this->assertTrue(new DataUriNormalizer()->supportsDenormalization($data, DataUriInterface::class));
     }
 }
