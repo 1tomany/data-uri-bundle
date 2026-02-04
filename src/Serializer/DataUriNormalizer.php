@@ -9,8 +9,10 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 
+use function count;
 use function filter_var;
 use function is_a;
+use function is_array;
 use function is_string;
 use function str_starts_with;
 use function stripos;
@@ -22,20 +24,26 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
-     * @param string|File $data
+     * @param string|\Stringable|File $data
      * @param array<string, mixed> $context
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): DataUriInterface
     {
-        if ($data instanceof UploadedFile) {
-            if (!$data->isValid()) {
-                throw new InvalidArgumentException($data->getErrorMessage());
+        if ($data instanceof File) {
+            $name = $data->getFilename();
+
+            if ($data instanceof UploadedFile) {
+                if (!$data->isValid()) {
+                    throw new InvalidArgumentException($data->getErrorMessage());
+                }
+
+                $name = $data->getClientOriginalName();
+            }
+        } else {
+            if ($data instanceof \Stringable) {
+                $data = $data->__toString();
             }
 
-            $name = $data->getClientOriginalName();
-        }
-
-        if (is_string($data)) {
             // @see https://github.com/1tomany/rich-bundle/issues/66
             $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
 
@@ -56,7 +64,28 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
+        $isValueSupported = false;
+
+        if (is_a($type, DataUriInterface::class, true)) {
+            if ($this->isValueSupported($data)) {
+                $isValueSupported = true;
+            } else {
+                // @see https://github.com/1tomany/data-uri-bundle/issues/1
+                if (is_array($data) && ($dataCount = count($data)) > 0) {
+                    $supportedRecords = 0;
+
+                    foreach ($data as $dv) {
+                        if ($this->isValueSupported($dv)) {
+                            ++$supportedRecords;
+                        }
+                    }
+
+                    $isValueSupported = $dataCount === $supportedRecords;
+                }
+            }
+        }
+
+        return $isValueSupported;
     }
 
     /**
@@ -67,5 +96,10 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         return [
             DataUriInterface::class => true,
         ];
+    }
+
+    private function isValueSupported(mixed $value): bool
+    {
+        return is_string($value) || $value instanceof File || $value instanceof \Stringable;
     }
 }
