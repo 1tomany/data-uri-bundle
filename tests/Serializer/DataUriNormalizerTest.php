@@ -49,11 +49,6 @@ final class DataUriNormalizerTest extends TestCase
         $this->assertEquals('Hello, world!', $file->read());
     }
 
-    public function testDoesNotSupportsNormalizationWithEmptyStringDataAndDataUriInterfaceType(): void
-    {
-        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization('', DataUriInterface::class));
-    }
-
     public function testSupportsNormalizationWithStringDataAndDataUriInterfaceType(): void
     {
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization('Hello, world!', DataUriInterface::class));
@@ -69,7 +64,12 @@ final class DataUriNormalizerTest extends TestCase
         $this->assertFalse(new DataUriNormalizer()->supportsDenormalization([], DataUriInterface::class));
     }
 
-    public function testSupportsNormalizationWithListOfStringsDataAndDataUriInterfaceType(): void
+    public function testDoesNotSupportNormalizationWithEmptyListDataAndDataUriInterfaceType(): void
+    {
+        $this->assertFalse(new DataUriNormalizer()->supportsDenormalization([], DataUriInterface::class));
+    }
+
+    public function testSupportsNormalizationWithNonEmptyListOfStringsDataAndDataUriInterfaceType(): void
     {
         $this->assertTrue(new DataUriNormalizer()->supportsDenormalization(['Hello, world!'], DataUriInterface::class));
     }

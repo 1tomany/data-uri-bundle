@@ -16,7 +16,6 @@ use function is_array;
 use function is_string;
 use function str_starts_with;
 use function stripos;
-use function trim;
 
 use const FILTER_VALIDATE_URL;
 
@@ -62,11 +61,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         $isSupported = false;
 
         if (is_a($type, DataUriInterface::class, true)) {
-            $isNonEmptyString = function (mixed $v): bool {
-                return is_string($v) && !empty(trim($v));
-            };
-
-            if ($isNonEmptyString($data)) {
+            if (is_string($data)) {
                 $isSupported = true;
             }
 
@@ -75,22 +70,20 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
             }
 
             // @see https://github.com/1tomany/data-uri-bundle/issues/1
-            if (is_array($data) && count($data) > 0) {
-                $canDenormalizeData = true;
+            if (is_array($data) && ($dataCount = count($data)) > 0) {
+                $supportedRecords = 0;
 
                 foreach ($data as $dv) {
-                    if ($isNonEmptyString($dv)) {
-                        continue;
+                    if (is_string($dv)) {
+                        ++$supportedRecords;
                     }
 
                     if ($dv instanceof File) {
-                        continue;
+                        ++$supportedRecords;
                     }
-
-                    $canDenormalizeData = false;
                 }
 
-                $isSupported = $canDenormalizeData;
+                $isSupported = $dataCount === $supportedRecords;
             }
         }
 
