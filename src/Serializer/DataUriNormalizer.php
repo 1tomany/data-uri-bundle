@@ -71,12 +71,15 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
                 $canDenormalizeList = true;
 
                 foreach ($data as $dataValue) {
-                    if (
-                        !is_string($dataValue)
-                        && !$dataValue instanceof File
-                    ) {
-                        $canDenormalizeList = false;
+                    if (is_string($dataValue)) {
+                        continue;
                     }
+
+                    if ($dataValue instanceof File) {
+                        continue;
+                    }
+
+                    $canDenormalizeList = false;
                 }
 
                 return $canDenormalizeList;
