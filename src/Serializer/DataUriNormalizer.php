@@ -67,15 +67,16 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
                 return true;
             }
 
+            // @see https://github.com/1tomany/data-uri-bundle/issues/1
             if (is_array($data) && count($data) > 0) {
                 $canDenormalizeList = true;
 
-                foreach ($data as $dataValue) {
-                    if (is_string($dataValue)) {
+                foreach ($data as $dv) {
+                    if (is_string($dv)) {
                         continue;
                     }
 
-                    if ($dataValue instanceof File) {
+                    if ($dv instanceof File) {
                         continue;
                     }
 
@@ -87,8 +88,6 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
         }
 
         return false;
-
-        return (is_string($data) || $data instanceof File) && is_a($type, DataUriInterface::class, true);
     }
 
     /**
