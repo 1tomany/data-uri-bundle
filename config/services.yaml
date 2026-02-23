@@ -3,6 +3,10 @@ services:
         autowire: true
         autoconfigure: true
 
+    OneToMany\DataUriBundle\Command\EncodeFileCommand:
+        tags:
+            - { name: console.command }
+
     OneToMany\DataUriBundle\Serializer\DataUriNormalizer:
         tags:
             - { name: serializer.denormalizer }
