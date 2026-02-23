@@ -12,8 +12,7 @@ final class EncodeFileCommand extends Command
     public function __invoke(
         OutputInterface $output,
         #[Argument('Path to the file to encode')] string $path,
-    ): int
-    {
+    ): int {
         $output->write(new DataDecoder()->decode($path)->toDataUri(), false, OutputInterface::OUTPUT_RAW);
 
         return Command::SUCCESS;
