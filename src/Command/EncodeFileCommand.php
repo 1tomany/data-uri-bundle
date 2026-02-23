@@ -4,30 +4,28 @@ namespace OneToMany\DataUriBundle\Command;
 
 use OneToMany\DataUri\DataDecoder;
 use Symfony\Component\Console\Attribute\Argument;
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(
-    name: 'data-uri:encode-file',
-    description: 'Encodes a file as a data URL',
-)]
-final readonly class EncodeFileCommand
+final class EncodeFileCommand extends Command
 {
-    public function __invoke()
-    {
-    }
-
-    public function __construct(
+    public function __invoke(
         OutputInterface $output,
         #[Argument('Path to the file to encode')] string $path,
     ): int
     {
-        $file = new DataDecoder()->decode($path);
-
-        $output->write($file->toDataUri(), false, OutputInterface::OUTPUT_PLAIN);
+        $output->write(new DataDecoder()->decode($path)->toDataUri(), false, OutputInterface::OUTPUT_RAW);
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @see Symfony\Component\Console\Command\Command
+     */
+    protected function configure(): void
+    {
+        $this
+            ->setName('data-uri:encode-file')
+            ->setDescription('Outputs a file as a base64 encoded data URL');
     }
 }
