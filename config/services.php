@@ -13,7 +13,7 @@ return static function (ContainerConfigurator $container): void {
 
             // Serializers
             ->set(DataUriNormalizer::class)
-                ->tag('serializer.normalizer')
                 ->tag('serializer.denormalizer')
+                ->tag('serializer.normalizer')
     ;
 };

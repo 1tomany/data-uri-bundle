@@ -8,6 +8,7 @@ use OneToMany\DataUri\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 use function count;
 use function filter_var;
@@ -19,7 +20,7 @@ use function stripos;
 
 use const FILTER_VALIDATE_URL;
 
-final readonly class DataUriNormalizer implements DenormalizerInterface
+final readonly class DataUriNormalizer implements DenormalizerInterface, NormalizerInterface
 {
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
@@ -58,6 +59,26 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     }
 
     /**
+     * @see Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     *
+     * @param DataUriInterface $data
+     *
+     * @return array{
+     *   name: non-empty-string,
+     *   size: non-negative-int,
+     *   format: non-empty-lowercase-string,
+     * }
+     */
+    public function normalize(mixed $data, ?string $format = null, array $context = []): array
+    {
+        return [
+            'name' => $data->getName(),
+            'size' => $data->getSize(),
+            'format' => $data->getFormat(),
+        ];
+    }
+
+    /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
      * @param array<string, mixed> $context
@@ -89,7 +110,16 @@ final readonly class DataUriNormalizer implements DenormalizerInterface
     }
 
     /**
+     * @see Symfony\Component\Serializer\Normalizer\NormalizerInterface
+     */
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
+    {
+        return $data instanceof DataUriInterface;
+    }
+
+    /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
+     * @see Symfony\Component\Serializer\Normalizer\NormalizerInterface
      */
     public function getSupportedTypes(?string $format): array
     {
