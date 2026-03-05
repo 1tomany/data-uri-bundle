@@ -8,6 +8,7 @@
     "require": {
         "php": ">=8.4",
         "1tomany/data-uri": "^6.0",
+        "symfony/config": "^7.2|^8.0",
         "symfony/console": "^7.2|^8.0",
         "symfony/dependency-injection": "^7.2|^8.0",
         "symfony/http-kernel": "^7.2|^8.0",
