@@ -25,7 +25,7 @@ class DataUriBundle extends AbstractBundle
                 ->set(EncodeFileCommand::class)
                     ->tag('console.command')
 
-                // Serializers
+                // Normalizers
                 ->set(DataUriNormalizer::class)
                     ->tag('serializer.denormalizer')
                     ->tag('serializer.normalizer')
