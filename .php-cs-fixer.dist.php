@@ -9,11 +9,9 @@ $finder = new Finder();
 $finder->in([
     './',
     './src/',
-    './tests/',
 ]);
 
 $finder->exclude([
-    'config',
     'vendor',
 ]);
 
@@ -28,6 +26,10 @@ $config->setRules([
         'import_classes' => false,
         'import_constants' => true,
         'import_functions' => true,
+    ],
+    'operator_linebreak' => [
+        'only_booleans' => true,
+        'position' => 'end',
     ],
     'phpdoc_align' => [
         'align' => 'left',
