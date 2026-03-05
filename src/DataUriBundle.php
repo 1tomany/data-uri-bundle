@@ -13,6 +13,8 @@ class DataUriBundle extends AbstractBundle
     protected string $extensionAlias = 'onetomany_datauri';
 
     /**
+     * @see Symfony\Component\DependencyInjection\Extension\ConfigurableExtensionInterface
+     *
      * @param array<string, mixed> $config
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
