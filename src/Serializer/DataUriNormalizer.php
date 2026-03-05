@@ -79,8 +79,6 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
 
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
-     *
-     * @param array<string, mixed> $context
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
