@@ -2,6 +2,8 @@
 
 namespace OneToMany\DataUriBundle;
 
+use OneToMany\DataUriBundle\Command\EncodeFileCommand;
+use OneToMany\DataUriBundle\Serializer\DataUriNormalizer;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -15,6 +17,16 @@ class DataUriBundle extends AbstractBundle
      */
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
-        $container->import('../config/services.php');
+        $container
+            ->services()
+                // Commands
+                ->set(EncodeFileCommand::class)
+                    ->tag('console.command')
+
+                // Serializers
+                ->set(DataUriNormalizer::class)
+                    ->tag('serializer.denormalizer')
+                    ->tag('serializer.normalizer')
+        ;
     }
 }
