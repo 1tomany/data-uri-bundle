@@ -17,6 +17,7 @@ No configuration is necessary for the bundle. The denormalizer for `OneToMany\Da
 ## Components
 
 - `DataUriInterface` denormalizer via the `OneToMany\DataUriBundle\Serializer\DataUriNormalizer` class.
+- `onetomany:data-uri:encode-file` console command to generate a base64 encoded data URI representation of a file.
 
 ## Credits
 
