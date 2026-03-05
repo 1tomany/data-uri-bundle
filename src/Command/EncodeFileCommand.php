@@ -24,7 +24,7 @@ final class EncodeFileCommand extends Command
     protected function configure(): void
     {
         $this
-            ->setName('data-uri:encode-file')
+            ->setName('onetomany:data-uri:encode-file')
             ->setDescription('Outputs a file as a base64 encoded data URL');
     }
 }

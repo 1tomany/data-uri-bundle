@@ -8,11 +8,13 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 class DataUriBundle extends AbstractBundle
 {
+    protected string $extensionAlias = 'onetomany_datauri';
+
     /**
      * @param array<string, mixed> $config
      */
     public function loadExtension(array $config, ContainerConfigurator $configurator, ContainerBuilder $container): void
     {
-        $configurator->import('../config/services.yaml');
+        $configurator->import('../config/services.php');
     }
 }
