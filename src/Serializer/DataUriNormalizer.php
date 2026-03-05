@@ -26,7 +26,6 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
      * @param string|\Stringable|File $data
-     * @param array<string, mixed> $context
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): DataUriInterface
     {
