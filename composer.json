@@ -7,7 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.4",
-        "1tomany/data-uri": "^6.0.7",
+        "1tomany/data-uri": "6.0.*",
         "symfony/config": "^7.2|^8.0|^8.1",
         "symfony/console": "^7.2|^8.0|^8.1",
         "symfony/dependency-injection": "^7.2|^8.0|^8.1",
@@ -35,7 +35,12 @@
     "scripts": {
         "fix": "./vendor/bin/php-cs-fixer fix",
         "stan": "./vendor/bin/phpstan",
-        "test": "./vendor/bin/phpunit"
+        "test": "./vendor/bin/phpunit",
+        "flat": [
+            "@fix",
+            "@stan",
+            "@test"
+        ]
     },
     "authors": [
         {
