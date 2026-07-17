@@ -2,10 +2,7 @@
 
 use OneToMany\DataUri\Contract\Enum\Type;
 
-// Map the file type onto itself to avoid having to
-// maintain this list every time a new type is added
-$fileTypeNames = \array_map(function (Type $type): string {
-    return $type->getName();
-}, Type::cases());
+// Map the file type onto itself to avoid having to manually maintain this list
+$fileTypeNames = \array_map(fn (Type $t): string => $t->getName(), Type::cases());
 
 return \array_combine($fileTypeNames, $fileTypeNames);
