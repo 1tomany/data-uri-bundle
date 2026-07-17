@@ -1,42 +1,11 @@
 <?php
 
-return [
-    // Type::getName()
-    'AAC' => 'AAC',
-    'AIFF' => 'AIFF',
-    'BIN' => 'BIN',
-    'BMP' => 'BMP',
-    'CSS' => 'CSS',
-    'CSV' => 'CSV',
-    'DOC' => 'DOC',
-    'DOCX' => 'DOCX',
-    'FLAC' => 'FLAC',
-    'GIF' => 'GIF',
-    'HEIC' => 'HEIC',
-    'HEICS' => 'HEICS',
-    'HEIF' => 'HEIF',
-    'HEIFS' => 'HEIFS',
-    'HTML' => 'HTML',
-    'JPEG' => 'JPEG',
-    'JS' => 'JS',
-    'JSON' => 'JSON',
-    'JSONL' => 'JSONL',
-    'M4A' => 'M4A',
-    'Markdown' => 'Markdown',
-    'MOV' => 'MOV',
-    'MP3' => 'MP3',
-    'MP4' => 'MP4',
-    'OGA' => 'OGA',
-    'PDF' => 'PDF',
-    'PNG' => 'PNG',
-    'PHP' => 'PHP',
-    'TIFF' => 'TIFF',
-    'TXT' => 'TXT',
-    'WAV' => 'WAV',
-    'WEBP' => 'WEBP',
-    'XLS' => 'XLS',
-    'XLSX' => 'XLSX',
-    'XML' => 'XML',
-    'ZIP' => 'ZIP',
-    'Other' => 'Other',
-];
+use OneToMany\DataUri\Contract\Enum\Type;
+
+// Map the file type onto itself to avoid having to
+// maintain this list every time a new type is added
+$fileTypeNames = \array_map(function (Type $type): string {
+    return $type->getName();
+}, Type::cases());
+
+return \array_combine($fileTypeNames, $fileTypeNames);
