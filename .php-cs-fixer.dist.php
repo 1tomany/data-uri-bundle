@@ -9,6 +9,7 @@ $finder = new Finder();
 $finder->in([
     './src/',
     './tests/',
+    './translations/',
 ]);
 
 $config = new Config()
@@ -21,10 +22,6 @@ $config = new Config()
             'import_classes' => false,
             'import_constants' => true,
             'import_functions' => true,
-        ],
-        'operator_linebreak' => [
-            'only_booleans' => true,
-            'position' => 'end',
         ],
         'phpdoc_align' => [
             'align' => 'left',

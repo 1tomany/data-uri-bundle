@@ -4,5 +4,6 @@ parameters:
     paths:
         - ./src/
         - ./tests/
+        - ./translations/
 
     tmpDir: ./.build/phpstan.cache
