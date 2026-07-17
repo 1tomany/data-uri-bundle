@@ -9,6 +9,7 @@ $finder = new Finder();
 $finder->in([
     './src/',
     './tests/',
+    './translations/',
 ]);
 
 $config = new Config()
