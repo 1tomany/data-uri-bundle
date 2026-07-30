@@ -40,6 +40,16 @@ final class TemporaryFileNormalizerTest extends TestCase
         $this->assertEquals('TemporaryFileNormalizerTest.php', $file->getName());
     }
 
+    public function testDenormalizingNonSymfonyFileRequiresStringOrStringableData(): void
+    {
+        $data = new \DateTimeImmutable();
+
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessageIs('Expected data of type "string", "'.\get_debug_type($data).'" given.');
+
+        new TemporaryFileNormalizer()->denormalize($data, TemporaryFileInterface::class);
+    }
+
     public function testDenormalizingStringableNonSymfonyFileObject(): void
     {
         $data = new class implements \Stringable {

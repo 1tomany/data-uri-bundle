@@ -15,6 +15,7 @@ use function filter_var;
 use function get_debug_type;
 use function is_a;
 use function is_array;
+use function is_scalar;
 use function is_string;
 use function sprintf;
 use function stripos;
@@ -46,6 +47,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
 
             return $this->dataDecoder->decode($data, name: $name ?? $data->getFilename());
         }
+
         if ($data instanceof \Stringable) {
             $data = $data->__toString();
         }
