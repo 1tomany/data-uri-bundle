@@ -44,12 +44,12 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
                 $name = $data->getClientOriginalName();
             }
         } else {
-            if (!is_string($data) && !$data instanceof \Stringable) {
-                throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string|\Stringable', get_debug_type($data)));
-            }
-
             if ($data instanceof \Stringable) {
                 $data = $data->__toString();
+            }
+
+            if (!is_string($data)) {
+                throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string', get_debug_type($data)));
             }
 
             // @see https://github.com/1tomany/rich-bundle/issues/66
