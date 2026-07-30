@@ -32,6 +32,9 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
      * @param string|\Stringable|File $data
+     *
+     * @throws InvalidArgumentException when the data is an invalid file {@see Symfony\Component\HttpFoundation\File\UploadedFile}
+     * @throws InvalidArgumentException when the data is not the correct type
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): TemporaryFileInterface
     {
@@ -74,6 +77,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      *   size: non-negative-int,
      *   format: non-empty-lowercase-string,
      * }
+     *
+     * @throws InvalidArgumentException when the data is not the correct type {@see OneToMany\DataUri\Contract\Record\TemporaryFileInterface}
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
