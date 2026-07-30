@@ -93,28 +93,38 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        $isValueSupported = false;
+        $isSupported = static function (mixed $value): bool {
+            return
+                is_string($value)
+                || $value instanceof File
+                || $value instanceof \Stringable
+            ;
+        };
+
+        $isDataSupported = false;
 
         if (is_a($type, TemporaryFileInterface::class, true)) {
-            if ($this->isValueSupported($data)) {
-                $isValueSupported = true;
+            if ($isSupported($data)) {
+                $isDataSupported = true;
             } else {
                 // @see https://github.com/1tomany/data-uri-bundle/issues/1
-                if (is_array($data) && ($dataCount = count($data)) > 0) {
-                    $supportedRecords = 0;
+                if (is_array($data)) {
+                    if ($count = count($data)) {
+                        $supportedCount = 0;
 
-                    foreach ($data as $dv) {
-                        if ($this->isValueSupported($dv)) {
-                            ++$supportedRecords;
+                        foreach ($data as $dv) {
+                            if ($isSupported($dv)) {
+                                ++$supportedCount;
+                            }
                         }
-                    }
 
-                    $isValueSupported = $dataCount === $supportedRecords;
+                        $isDataSupported = $count === $supportedCount;
+                    }
                 }
             }
         }
 
-        return $isValueSupported;
+        return $isDataSupported;
     }
 
     /**
@@ -146,10 +156,5 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
         }
 
         return 0 !== stripos($data, 'data:');
-    }
-
-    private function isValueSupported(mixed $value): bool
-    {
-        return is_string($value) || $value instanceof File || $value instanceof \Stringable;
     }
 }
