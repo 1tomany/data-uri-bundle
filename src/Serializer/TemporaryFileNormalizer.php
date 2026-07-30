@@ -95,7 +95,6 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
     {
         $isDataSupported = false;
 
-
         $isTemporaryFile = is_a($type, TemporaryFileInterface::class, true);
 
         if (!$isTemporaryFile) {
