@@ -93,6 +93,15 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
+        $isDataSupported = false;
+
+
+        $isTemporaryFile = is_a($type, TemporaryFileInterface::class, true);
+
+        if (!$isTemporaryFile) {
+            return $isDataSupported;
+        }
+
         $isSupported = static function (mixed $value): bool {
             return
                 is_string($value)
@@ -101,25 +110,21 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             ;
         };
 
-        $isDataSupported = false;
+        if ($isSupported($data)) {
+            $isDataSupported = true;
+        } else {
+            // @see https://github.com/1tomany/data-uri-bundle/issues/1
+            if (is_array($data)) {
+                if ($count = count($data)) {
+                    $supportedCount = 0;
 
-        if (is_a($type, TemporaryFileInterface::class, true)) {
-            if ($isSupported($data)) {
-                $isDataSupported = true;
-            } else {
-                // @see https://github.com/1tomany/data-uri-bundle/issues/1
-                if (is_array($data)) {
-                    if ($count = count($data)) {
-                        $supportedCount = 0;
-
-                        foreach ($data as $dv) {
-                            if ($isSupported($dv)) {
-                                ++$supportedCount;
-                            }
+                    foreach ($data as $dv) {
+                        if ($isSupported($dv)) {
+                            ++$supportedCount;
                         }
-
-                        $isDataSupported = $count === $supportedCount;
                     }
+
+                    $isDataSupported = $count === $supportedCount;
                 }
             }
         }
