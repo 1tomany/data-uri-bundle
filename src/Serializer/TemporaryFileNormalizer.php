@@ -34,7 +34,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      * @param string|\Stringable|File $data
      *
      * @throws InvalidArgumentException when the data is an invalid file {@see Symfony\Component\HttpFoundation\File\UploadedFile}
-     * @throws InvalidArgumentException when the data is not the correct type
+     * @throws InvalidArgumentException when the data is an unexpected type
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): TemporaryFileInterface
     {
@@ -78,7 +78,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      *   format: non-empty-lowercase-string,
      * }
      *
-     * @throws InvalidArgumentException when the data is not the correct type {@see OneToMany\DataUri\Contract\Record\TemporaryFileInterface}
+     * @throws InvalidArgumentException when the data is an unexpected type {@see OneToMany\DataUri\Contract\Record\TemporaryFileInterface}
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
@@ -95,18 +95,18 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
 
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
+     *
+     * @param class-string<TemporaryFileInterface> $type
      */
     public function supportsDenormalization(mixed $data, string $type, ?string $format = null, array $context = []): bool
     {
-        $isDataSupported = false;
+        $supportsDenormalization = false;
 
-        $isTemporaryFile = is_a($type, TemporaryFileInterface::class, true);
-
-        if (!$isTemporaryFile) {
-            return $isDataSupported;
+        if (!is_a($type, TemporaryFileInterface::class, true)) { // @phpstan-ignore function.alreadyNarrowedType
+            return $supportsDenormalization;
         }
 
-        $isSupported = static function (mixed $value): bool {
+        $isDataSupported = static function (mixed $value): bool {
             return
                 is_string($value)
                 || $value instanceof File
@@ -114,8 +114,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             ;
         };
 
-        if ($isSupported($data)) {
-            $isDataSupported = true;
+        if ($isDataSupported($data)) {
+            $supportsDenormalization = true;
         } else {
             // @see https://github.com/1tomany/data-uri-bundle/issues/1
             if (is_array($data)) {
@@ -123,17 +123,17 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
                     $supportedCount = 0;
 
                     foreach ($data as $dv) {
-                        if ($isSupported($dv)) {
+                        if ($isDataSupported($dv)) {
                             ++$supportedCount;
                         }
                     }
 
-                    $isDataSupported = $count === $supportedCount;
+                    $supportsDenormalization = $count === $supportedCount;
                 }
             }
         }
 
-        return $isDataSupported;
+        return $supportsDenormalization;
     }
 
     /**
