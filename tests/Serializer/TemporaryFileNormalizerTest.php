@@ -2,7 +2,7 @@
 
 namespace OneToMany\DataUriBundle\Tests\Serializer;
 
-use OneToMany\DataUri\Contract\Record\DataUriInterface;
+use OneToMany\DataUri\Contract\Record\TemporaryFileInterface;
 use OneToMany\DataUri\Exception\InvalidArgumentException;
 use OneToMany\DataUriBundle\Serializer\TemporaryFileNormalizer;
 use PHPUnit\Framework\Attributes\Group;
@@ -16,28 +16,28 @@ use const UPLOAD_ERR_PARTIAL;
 
 #[Group('UnitTests')]
 #[Group('SerializerTests')]
-final class DataUriNormalizerTest extends TestCase
+final class TemporaryFileNormalizerTest extends TestCase
 {
     public function testDenormalizingUploadedFileRequiresItToBeValid(): void
     {
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage('The file "photo.jpeg" was only partially uploaded.');
+        $this->expectExceptionMessageIs('The file "photo.jpeg" was only partially uploaded.');
 
-        new TemporaryFileNormalizer()->denormalize(new UploadedFile('/path/to/photo.jpeg', 'photo.jpeg', 'image/jpeg', UPLOAD_ERR_PARTIAL, true), DataUriInterface::class);
+        new TemporaryFileNormalizer()->denormalize(new UploadedFile('/path/to/photo.jpeg', 'photo.jpeg', 'image/jpeg', UPLOAD_ERR_PARTIAL, true), TemporaryFileInterface::class);
     }
 
     public function testDenormalizingFileUsesFilename(): void
     {
-        $file = new TemporaryFileNormalizer()->denormalize(new File(__FILE__), DataUriInterface::class);
+        $file = new TemporaryFileNormalizer()->denormalize(new File(__FILE__), TemporaryFileInterface::class);
 
-        $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
+        $this->assertEquals('TemporaryFileNormalizerTest.php', $file->getName());
     }
 
     public function testDenormalizingUploadedFileUsesClientOriginalName(): void
     {
-        $file = new TemporaryFileNormalizer()->denormalize(new UploadedFile(__FILE__, basename(__FILE__), 'text/x-php', test: true), DataUriInterface::class);
+        $file = new TemporaryFileNormalizer()->denormalize(new UploadedFile(__FILE__, basename(__FILE__), 'text/x-php', test: true), TemporaryFileInterface::class);
 
-        $this->assertEquals('DataUriNormalizerTest.php', $file->getName());
+        $this->assertEquals('TemporaryFileNormalizerTest.php', $file->getName());
     }
 
     public function testDenormalizingStringableNonSymfonyFileObject(): void
@@ -49,7 +49,7 @@ final class DataUriNormalizerTest extends TestCase
             }
         };
 
-        $file = new TemporaryFileNormalizer()->denormalize($data, DataUriInterface::class);
+        $file = new TemporaryFileNormalizer()->denormalize($data, TemporaryFileInterface::class);
 
         $this->assertTrue($file->getType()->isTxt());
         $this->assertEquals('Hello, world!', $file->read());
@@ -57,7 +57,7 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDenormalizingRawText(): void
     {
-        $file = new TemporaryFileNormalizer()->denormalize('Hello, world!', DataUriInterface::class);
+        $file = new TemporaryFileNormalizer()->denormalize('Hello, world!', TemporaryFileInterface::class);
 
         $this->assertTrue($file->getType()->isTxt());
         $this->assertEquals('Hello, world!', $file->read());
@@ -65,48 +65,48 @@ final class DataUriNormalizerTest extends TestCase
 
     public function testDenormalizingDataUri(): void
     {
-        $file = new TemporaryFileNormalizer()->denormalize('data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==', DataUriInterface::class);
+        $file = new TemporaryFileNormalizer()->denormalize('data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==', TemporaryFileInterface::class);
 
         $this->assertTrue($file->getType()->isTxt());
         $this->assertEquals('Hello, world!', $file->read());
     }
 
-    public function testDoesNotSupportNormalizationWithNonStringAndNonSymfonyFileDataAndDataUriInterface(): void
+    public function testDoesNotSupportNormalizationWithNonStringAndNonSymfonyFileDataAndTemporaryFileInterface(): void
     {
-        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization(new \stdClass(), DataUriInterface::class));
+        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization(new \stdClass(), TemporaryFileInterface::class));
     }
 
-    public function testSupportsNormalizationWithStringDataAndDataUriInterfaceType(): void
+    public function testSupportsNormalizationWithStringDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization('Hello, world!', DataUriInterface::class));
+        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization('Hello, world!', TemporaryFileInterface::class));
     }
 
-    public function testSupportsNormalizationWithSymfonyFileDataAndDataUriInterfaceType(): void
+    public function testSupportsNormalizationWithSymfonyFileDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization(new File('file.pdf', false), DataUriInterface::class));
+        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization(new File('file.pdf', false), TemporaryFileInterface::class));
     }
 
-    public function testDoesNotSupportNormalizationWithEmptyListDataAndDataUriInterfaceType(): void
+    public function testDoesNotSupportNormalizationWithEmptyListDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization([], DataUriInterface::class));
+        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization([], TemporaryFileInterface::class));
     }
 
-    public function testDoesNotSupportNormalizationWithNonEmptyListOfNonStringAndNonSymfonyFileDataAndDataUriInterfaceType(): void
+    public function testDoesNotSupportNormalizationWithNonEmptyListOfNonStringAndNonSymfonyFileDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization(['Hello, world!', null, new \stdClass()], DataUriInterface::class));
+        $this->assertFalse(new TemporaryFileNormalizer()->supportsDenormalization(['Hello, world!', null, new \stdClass()], TemporaryFileInterface::class));
     }
 
-    public function testSupportsNormalizationWithNonEmptyListOfStringsDataAndDataUriInterfaceType(): void
+    public function testSupportsNormalizationWithNonEmptyListOfStringsDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization(['Hello, world!'], DataUriInterface::class));
+        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization(['Hello, world!'], TemporaryFileInterface::class));
     }
 
-    public function testSupportsNormalizationWithNonEmptyListOfSymfonyFileDataAndDataUriInterfaceType(): void
+    public function testSupportsNormalizationWithNonEmptyListOfSymfonyFileDataAndTemporaryFileInterfaceType(): void
     {
-        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization([new File('file.pdf', false)], DataUriInterface::class));
+        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization([new File('file.pdf', false)], TemporaryFileInterface::class));
     }
 
-    public function testSupportsNormalizationWithNonEmptyListOfStringAndSymfonyFileDataAndDataUriInterfaceType(): void
+    public function testSupportsNormalizationWithNonEmptyListOfStringAndSymfonyFileDataAndTemporaryFileInterfaceType(): void
     {
         $data = [
             'Hello, world!',
@@ -114,6 +114,6 @@ final class DataUriNormalizerTest extends TestCase
             'data:text/plain;base64,SGVsbG8sIHdvcmxkIQ==',
         ];
 
-        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization($data, DataUriInterface::class));
+        $this->assertTrue(new TemporaryFileNormalizer()->supportsDenormalization($data, TemporaryFileInterface::class));
     }
 }
