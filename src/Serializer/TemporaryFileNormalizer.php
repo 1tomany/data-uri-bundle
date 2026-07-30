@@ -24,6 +24,12 @@ use const FILTER_VALIDATE_URL;
 
 final readonly class TemporaryFileNormalizer implements DenormalizerInterface, NormalizerInterface
 {
+    public function __construct(
+        private DataDecoder $dataDecoder = new DataDecoder(),
+    )
+    {
+    }
+
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
@@ -31,11 +37,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): TemporaryFileInterface
     {
-        $name = null;
-
         if ($data instanceof File) {
-            $name = $data->getFilename();
-
             if ($data instanceof UploadedFile) {
                 if (!$data->isValid()) {
                     throw new InvalidArgumentException($data->getErrorMessage());
@@ -43,6 +45,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
 
                 $name = $data->getClientOriginalName();
             }
+
+            return $this->dataDecoder->decode($data, name: $name ?? $data->getFilename());
         } else {
             if ($data instanceof \Stringable) {
                 $data = $data->__toString();
@@ -58,11 +62,11 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             // The data is not a URL or a data URI, so the
             // best we can do is assume it's a block of text
             if (!$isHttpUrl && !str_starts_with($data, 'data:')) {
-                return new DataDecoder()->decodeText($data);
+                return $this->dataDecoder->decodeText($data);
             }
-        }
 
-        return new DataDecoder()->decode($data, name: $name);
+            return $this->dataDecoder->decode($data);
+        }
     }
 
     /**
