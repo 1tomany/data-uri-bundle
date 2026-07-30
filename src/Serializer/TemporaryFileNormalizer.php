@@ -10,7 +10,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
-use function assert;
 use function count;
 use function filter_var;
 use function get_debug_type;
@@ -32,6 +31,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): TemporaryFileInterface
     {
+        $name = null;
+
         if ($data instanceof File) {
             $name = $data->getFilename();
 
@@ -43,6 +44,10 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
                 $name = $data->getClientOriginalName();
             }
         } else {
+            if (!is_string($data) && !$data instanceof \Stringable) {
+                throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string|\Stringable', get_debug_type($data)));
+            }
+
             if ($data instanceof \Stringable) {
                 $data = $data->__toString();
             }
@@ -57,7 +62,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             }
         }
 
-        return new DataDecoder()->decode($data, name: $name ?? null);
+        return new DataDecoder()->decode($data, name: $name);
     }
 
     /**
@@ -73,7 +78,9 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        assert($data instanceof TemporaryFileInterface, sprintf('Data of type "%s" provided.', get_debug_type($data)));
+        if (!$data instanceof TemporaryFileInterface) {
+            throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', TemporaryFileInterface::class, get_debug_type($data)));
+        }
 
         return [
             'name' => $data->getName(),
