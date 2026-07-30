@@ -17,7 +17,6 @@ use function is_a;
 use function is_array;
 use function is_string;
 use function sprintf;
-use function str_starts_with;
 use function stripos;
 
 use const FILTER_VALIDATE_URL;
@@ -26,8 +25,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
 {
     public function __construct(
         private DataDecoder $dataDecoder = new DataDecoder(),
-    )
-    {
+    ) {
     }
 
     /**
@@ -47,26 +45,22 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             }
 
             return $this->dataDecoder->decode($data, name: $name ?? $data->getFilename());
-        } else {
-            if ($data instanceof \Stringable) {
-                $data = $data->__toString();
-            }
-
-            if (!is_string($data)) { // @phpstan-ignore function.alreadyNarrowedType
-                throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string', get_debug_type($data)));
-            }
-
-            // @see https://github.com/1tomany/rich-bundle/issues/66
-            $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
-
-            // The data is not a URL or a data URI, so the
-            // best we can do is assume it's a block of text
-            if (!$isHttpUrl && !str_starts_with($data, 'data:')) {
-                return $this->dataDecoder->decodeText($data);
-            }
-
-            return $this->dataDecoder->decode($data);
         }
+        if ($data instanceof \Stringable) {
+            $data = $data->__toString();
+        }
+
+        if (!is_string($data)) { // @phpstan-ignore function.alreadyNarrowedType
+            throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string', get_debug_type($data)));
+        }
+
+        // The data is not a URL or an encoded URI,
+        // so we assume it is a block of plaintext
+        if (true === $this->isPlaintextData($data)) {
+            return $this->dataDecoder->decodeText($data);
+        }
+
+        return $this->dataDecoder->decode($data);
     }
 
     /**
@@ -139,6 +133,18 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
         return [
             TemporaryFileInterface::class => true,
         ];
+    }
+
+    private function isPlaintextData(string $data): bool
+    {
+        // @see https://github.com/1tomany/rich-bundle/issues/66
+        $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
+
+        if ($isHttpUrl) {
+            return false;
+        }
+
+        return 0 !== stripos($data, 'data:');
     }
 
     private function isValueSupported(mixed $value): bool

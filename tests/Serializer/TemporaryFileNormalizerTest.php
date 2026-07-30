@@ -55,7 +55,7 @@ final class TemporaryFileNormalizerTest extends TestCase
         $this->assertEquals('Hello, world!', $file->read());
     }
 
-    public function testDenormalizingRawText(): void
+    public function testDenormalizingText(): void
     {
         $file = new TemporaryFileNormalizer()->denormalize('Hello, world!', TemporaryFileInterface::class);
 
