@@ -12,11 +12,11 @@ composer require 1tomany/data-uri-bundle
 
 ## Configuration
 
-No configuration is necessary for the bundle. The denormalizer for `OneToMany\DataUri\Contract\Record\DataUriInterface` objects is automatically tagged and configured.
+No configuration is necessary for the bundle. The denormalizer for objects that implement the interface `OneToMany\DataUri\Contract\Record\TemporaryFileInterface` is automatically tagged and configured.
 
 ## Components
 
-- `DataUriInterface` denormalizer via the `OneToMany\DataUriBundle\Serializer\DataUriNormalizer` class.
+- `TemporaryFileInterface` denormalizer via the `OneToMany\DataUriBundle\Serializer\DataUriNormalizer` class.
 - `onetomany:data-uri:encode-file` console command to generate a base64 encoded data URI representation of a file.
 
 ## Credits
