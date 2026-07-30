@@ -52,7 +52,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
                 $data = $data->__toString();
             }
 
-            if (!is_string($data)) {
+            if (!is_string($data)) { // @phpstan-ignore function.alreadyNarrowedType
                 throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', 'string', get_debug_type($data)));
             }
 
@@ -82,7 +82,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
-        if (!$data instanceof TemporaryFileInterface) {
+        if (!$data instanceof TemporaryFileInterface) { // @phpstan-ignore instanceof.alwaysTrue
             throw new InvalidArgumentException(sprintf('Expected data of type "%s", "%s" given.', TemporaryFileInterface::class, get_debug_type($data)));
         }
 
