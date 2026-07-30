@@ -10,11 +10,14 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+use function assert;
 use function count;
 use function filter_var;
+use function get_debug_type;
 use function is_a;
 use function is_array;
 use function is_string;
+use function sprintf;
 use function str_starts_with;
 use function stripos;
 
@@ -47,8 +50,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             // @see https://github.com/1tomany/rich-bundle/issues/66
             $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
 
-            // The data is not an HTTP URL or a "data:" URI, so
-            // the best we can do is assume it's a block of text
+            // The data is not a URL or a data URI, so the
+            // best we can do is assume it's a block of text
             if (!$isHttpUrl && !str_starts_with($data, 'data:')) {
                 return new DataDecoder()->decodeText($data);
             }
@@ -70,6 +73,8 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
      */
     public function normalize(mixed $data, ?string $format = null, array $context = []): array
     {
+        assert($data instanceof TemporaryFileInterface, sprintf('Data of type "%s" provided.', get_debug_type($data)));
+
         return [
             'name' => $data->getName(),
             'size' => $data->getSize(),
