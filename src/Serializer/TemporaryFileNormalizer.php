@@ -166,6 +166,6 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
             return false;
         }
 
-        return 0 !== stripos($data, 'data:');
+        return false === stripos($data, 'data:');
     }
 }
