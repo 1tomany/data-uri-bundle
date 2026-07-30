@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 use function basename;
+use function get_debug_type;
 
 use const UPLOAD_ERR_PARTIAL;
 
@@ -45,9 +46,9 @@ final class TemporaryFileNormalizerTest extends TestCase
         $data = new \DateTimeImmutable();
 
         $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessageIs('Expected data of type "string", "'.\get_debug_type($data).'" given.');
+        $this->expectExceptionMessageIs('Expected data of type "string", "'.get_debug_type($data).'" given.');
 
-        new TemporaryFileNormalizer()->denormalize($data, TemporaryFileInterface::class);
+        new TemporaryFileNormalizer()->denormalize($data, TemporaryFileInterface::class); // @phpstan-ignore argument.type
     }
 
     public function testDenormalizingStringableNonSymfonyFileObject(): void

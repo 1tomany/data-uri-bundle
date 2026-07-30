@@ -15,7 +15,6 @@ use function filter_var;
 use function get_debug_type;
 use function is_a;
 use function is_array;
-use function is_scalar;
 use function is_string;
 use function sprintf;
 use function stripos;
