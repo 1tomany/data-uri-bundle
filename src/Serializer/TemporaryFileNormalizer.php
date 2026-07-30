@@ -95,6 +95,7 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
 
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
+     * @see https://github.com/1tomany/data-uri-bundle/issues/1
      *
      * @param class-string<TemporaryFileInterface> $type
      */
@@ -117,7 +118,6 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
         if ($isDataSupported($data)) {
             $supportsDenormalization = true;
         } else {
-            // @see https://github.com/1tomany/data-uri-bundle/issues/1
             if (is_array($data)) {
                 if ($count = count($data)) {
                     $supportedCount = 0;
@@ -155,9 +155,11 @@ final readonly class TemporaryFileNormalizer implements DenormalizerInterface, N
         ];
     }
 
+    /**
+     * @see https://github.com/1tomany/rich-bundle/issues/66
+     */
     private function isPlaintextData(string $data): bool
     {
-        // @see https://github.com/1tomany/rich-bundle/issues/66
         $isHttpUrl = false !== filter_var($data, FILTER_VALIDATE_URL) && 0 === stripos($data, 'http');
 
         if ($isHttpUrl) {
