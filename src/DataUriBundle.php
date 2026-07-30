@@ -3,7 +3,7 @@
 namespace OneToMany\DataUriBundle;
 
 use OneToMany\DataUriBundle\Command\EncodeFileCommand;
-use OneToMany\DataUriBundle\Serializer\DataUriNormalizer;
+use OneToMany\DataUriBundle\Serializer\TemporaryFileNormalizer;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
@@ -26,7 +26,7 @@ class DataUriBundle extends AbstractBundle
                     ->tag('console.command')
 
                 // Normalizers
-                ->set(DataUriNormalizer::class)
+                ->set(TemporaryFileNormalizer::class)
                     ->tag('serializer.denormalizer')
                     ->tag('serializer.normalizer')
         ;

@@ -2,7 +2,7 @@
 
 namespace OneToMany\DataUriBundle\Serializer;
 
-use OneToMany\DataUri\Contract\Record\DataUriInterface;
+use OneToMany\DataUri\Contract\Record\TemporaryFileInterface;
 use OneToMany\DataUri\DataDecoder;
 use OneToMany\DataUri\Exception\InvalidArgumentException;
 use Symfony\Component\HttpFoundation\File\File;
@@ -20,14 +20,14 @@ use function stripos;
 
 use const FILTER_VALIDATE_URL;
 
-final readonly class DataUriNormalizer implements DenormalizerInterface, NormalizerInterface
+final readonly class TemporaryFileNormalizer implements DenormalizerInterface, NormalizerInterface
 {
     /**
      * @see Symfony\Component\Serializer\Normalizer\DenormalizerInterface
      *
      * @param string|\Stringable|File $data
      */
-    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): DataUriInterface
+    public function denormalize(mixed $data, string $type, ?string $format = null, array $context = []): TemporaryFileInterface
     {
         if ($data instanceof File) {
             $name = $data->getFilename();
@@ -50,17 +50,17 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
             // The data is not an HTTP URL or a "data:" URI, so
             // the best we can do is assume it's a block of text
             if (!$isHttpUrl && !str_starts_with($data, 'data:')) {
-                return new DataDecoder()->decodeText($data, null);
+                return new DataDecoder()->decodeText($data);
             }
         }
 
-        return new DataDecoder()->decode($data, $name ?? null);
+        return new DataDecoder()->decode($data, name: $name ?? null);
     }
 
     /**
      * @see Symfony\Component\Serializer\Normalizer\NormalizerInterface
      *
-     * @param DataUriInterface $data
+     * @param TemporaryFileInterface $data
      *
      * @return array{
      *   name: non-empty-string,
@@ -84,7 +84,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
     {
         $isValueSupported = false;
 
-        if (is_a($type, DataUriInterface::class, true)) {
+        if (is_a($type, TemporaryFileInterface::class, true)) {
             if ($this->isValueSupported($data)) {
                 $isValueSupported = true;
             } else {
@@ -111,7 +111,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
      */
     public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
-        return $data instanceof DataUriInterface;
+        return $data instanceof TemporaryFileInterface;
     }
 
     /**
@@ -121,7 +121,7 @@ final readonly class DataUriNormalizer implements DenormalizerInterface, Normali
     public function getSupportedTypes(?string $format): array
     {
         return [
-            DataUriInterface::class => true,
+            TemporaryFileInterface::class => true,
         ];
     }
 
