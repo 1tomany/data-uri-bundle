@@ -1,15 +1,13 @@
 <?php
 
-use OneToMany\DataUri\Contract\Enum\Type;
+use OneToMany\DataUri\Contract\Enum\FileType;
 
-/**
- * Map the file type onto itself to avoid having
- * to maintain this list for each new file type.
- *
- * @var non-empty-list<non-empty-string> $names
- */
-$names = \array_map(static function (Type $type): string {
-    return $type->getName();
-}, Type::cases());
+$mapper = static fn (FileType $ft): string => $ft->getName();
 
-return \array_combine($names, $names);
+/** @var list<non-empty-string> $mappedNames */
+$mappedNames = array_map($mapper, FileType::cases());
+
+/** @var array<non-empty-string> $messages */
+$messages = array_combine($mappedNames, $mappedNames);
+
+return $messages;

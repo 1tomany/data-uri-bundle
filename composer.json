@@ -7,7 +7,7 @@
     "prefer-stable": true,
     "require": {
         "php": ">=8.4",
-        "1tomany/data-uri": "^7.0",
+        "1tomany/data-uri": "^7.0.1",
         "symfony/config": "^7.2|^8.0|^8.1",
         "symfony/console": "^7.2|^8.0|^8.1",
         "symfony/dependency-injection": "^7.2|^8.0|^8.1",
