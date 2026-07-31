@@ -11,10 +11,10 @@ use function array_map;
 
 #[Group('UnitTests')]
 #[Group('TranslationTests')]
-final class FileTypeNameMapperTest extends TestCase
+final class MessagesTest extends TestCase
 {
     /**
-     * @var array<array-key, scalar>
+     * @var array<non-empty-string>
      */
     private static array $messages = [];
 
