@@ -24,7 +24,7 @@ final class FileTypeNameMapperTest extends TestCase
     #[\Override]
     public static function setUpBeforeClass(): void
     {
-        static::$messages = require_once __DIR__.'/../../translations/messages.en.php';
+        static::$messages = require_once __DIR__.'/../../translations/messages.en.php'; // @phpstan-ignore assign.propertyType
     }
 
     #[DataProvider('providerFileTypeName')]
