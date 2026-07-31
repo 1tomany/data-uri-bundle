@@ -2,6 +2,12 @@
 
 use OneToMany\DataUri\Contract\Enum\FileType;
 
-$fileTypeNames = array_map(static fn ($ft) => $ft->getName(), FileType::cases());
+$mapper = static fn (FileType $ft): string => $ft->getName();
 
-return array_combine($fileTypeNames, $fileTypeNames);
+/** @var list<non-empty-string> $fileTypeNames */
+$fileTypeNames = array_map($mapper, FileType::cases());
+
+/** @var array<non-empty-string> $messages */
+$messages = array_combine($fileTypeNames, $fileTypeNames);
+
+return $messages;
