@@ -16,7 +16,7 @@ No configuration is necessary for the bundle. The denormalizer for objects that 
 
 ## Components
 
-- `TemporaryFileInterface` denormalizer via the `OneToMany\DataUriBundle\Serializer\DataUriNormalizer` class.
+- `TemporaryFileInterface` normalizer via the `OneToMany\DataUriBundle\Serializer\TemporaryFileNormalizer` class.
 - `onetomany:data-uri:encode-file` console command to generate a base64 encoded data URI representation of a file.
 
 ## Credits
