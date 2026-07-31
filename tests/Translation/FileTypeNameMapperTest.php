@@ -2,7 +2,7 @@
 
 namespace OneToMany\DataUriBundle\Tests\Translation;
 
-use OneToMany\DataUri\Contract\Enum\Type;
+use OneToMany\DataUri\Contract\Enum\FileType;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\Group;
 use PHPUnit\Framework\TestCase;
@@ -21,11 +21,9 @@ final class FileTypeNameMapperTest extends TestCase
         $this->assertIsArray($messages);
         $this->assertNotCount(0, $messages);
 
-        foreach (Type::cases() as $type) {
-            $name = $type->getName();
-
-            $this->assertArrayHasKey($name, $messages);
-            $this->assertEquals($name, $messages[$name]);
+        foreach (FileType::cases() as $fileType) {
+            $this->assertArrayHasKey($fileType->getName(), $messages);
+            $this->assertEquals($fileType->getName(), $messages[$fileType->getName()]);
         }
     }
 
