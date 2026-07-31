@@ -31,11 +31,11 @@ final class FileTypeNameMapperTest extends TestCase
     public function testFileTypeNameIsMappedOntoItself(string $name): void
     {
         $this->assertArrayHasKey($name, static::$messages);
-        $this->assertEquals($name, static::$messages[$name]);
+        $this->assertSame($name, static::$messages[$name]);
     }
 
     /**
-     * @return non-empty-list<array{non-empty-string}>
+     * @return non-empty-list<array{0: non-empty-string}>
      */
     public static function providerFileTypeName(): array
     {
